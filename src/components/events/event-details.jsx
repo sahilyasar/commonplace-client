@@ -1,8 +1,14 @@
 import Image from "next/image";
 import { CalendarDays, MapPin, Users } from "lucide-react";
 import EventActions from "@/components/events/event-actions";
+import { headers } from "next/headers";
+import { auth, db } from "@/lib/auth";
 
-export default function EventDetails({ event }) {
+export default async function EventDetails({ event }) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const membership = session?.user && await db.collection("joined_events").findOne({
+    email: session.user.email, eventId: event._id,
+  }, { projection: { _id: 1 } });
   const date = new Date(event.date);
   const dateIsValid = !Number.isNaN(date.getTime());
   const shortDate = dateIsValid ? new Intl.DateTimeFormat("en-GB", {
@@ -34,7 +40,7 @@ export default function EventDetails({ event }) {
         <p className="mt-5 flex items-center gap-2 text-sm text-muted-foreground md:hidden"><MapPin className="size-4 shrink-0" aria-hidden="true" />{event.location}</p>
       </section>
 
-      <EventActions />
+      <EventActions eventId={event._id} signedIn={Boolean(session?.user)} joined={Boolean(membership)} />
 
       <div className="mt-16 grid items-start gap-16 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] max-lg:gap-8 max-md:mt-7">
         <section aria-labelledby="about-event-heading">

@@ -66,7 +66,7 @@ export default function ProfileMenu({ user }) {
           <DropdownMenuItem render={<Link href="/my-events" />} className={itemStyle}>
             <List /> Manage Events
           </DropdownMenuItem>
-          <DropdownMenuItem className={itemStyle} onClick={() => toast("Joined Events is coming soon.")}>
+          <DropdownMenuItem render={<Link href="/joined-events" />} className={itemStyle}>
             <Check /> Joined Events
           </DropdownMenuItem>
           <DropdownMenuSeparator />

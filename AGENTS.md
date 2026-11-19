@@ -22,7 +22,7 @@ This repository is the Commonplace client, a community-service event platform. T
 - `EventsBrowser` provides client-side category filters, title/location/host search, nine-event pagination, and empty/error states. Pagination appears only when more than one page is needed. Shared navigation and homepage event links open `/all-events`.
 - `/all-events/[id]` is a public event-details page using `GET http://localhost:3001/event/:id`. It awaits `params` inside a Suspense-wrapped async component and validates MongoDB ObjectIds before fetching. Empty or missing records render the route's not-found UI; API failures show an error state.
 - Event details include a responsive photo/title hero, date and location, actual description and host name, general volunteer guidelines, and a schedule summary using the available date/location. The API does not supply times, verification, or participant data; do not invent those facts.
-- The details-page Share button copies its URL and shows a toast. Join Event currently shows a sign-in reminder; authentication and persisted joining are not implemented.
+- The details page supports sharing, joining future events, and leaving joined events. Server-side membership actions read the Better Auth session and store the event ID and member email in MongoDB's `joined_events` collection. The signed-in `/joined-events` page loads current event details in ascending date order.
 - Navbar and footer are shared by all pages and mounted inside `<body>` in the root layout. Do not add duplicate instances to individual pages. Shared links to homepage sections use `/#section-id` so they also work from `/add-form`.
 - `src/data/home.js` holds static features and gallery captions. Sample event records have been removed. The homepage's `UpcomingEvents` component still accepts an `events` prop and shows an empty state until that separate homepage feed is connected; `/all-events` already uses the API.
 - Event cards use the API fields `_id`, `title`, `type`, `date`, `location`, `description`, `thumbnailUrl`, and `hostName`, and link to `/all-events/[id]`. The shared card supports a `listing` variant for `/all-events`. Create-event links open `/add-form`; login and newsletter subscription still show informational toasts. Reading and creating events use the local Express backend; database persistence is owned by that separate backend.
@@ -52,14 +52,14 @@ This repository is the Commonplace client, a community-service event platform. T
 | `src/app/all-events/page.jsx` | Upcoming event listing shell, metadata, and streamed API request. |
 | `src/app/all-events/[id]/` | Public details route, API request, and custom not-found page. |
 | `src/components/events/event-details.jsx` | Responsive event hero, description, guidelines, schedule summary, and organizer information. |
-| `src/components/events/event-actions.jsx` | Client-side share-link and sign-in reminder buttons. |
+| `src/components/events/event-actions.jsx` | Share, join, and leave controls for event details. |
 | `src/components/events/event-details-loading.jsx` | Skeleton for streamed event details. |
 | `src/components/events/events-browser.jsx` | Client-side event filters, search, pagination, and result states. |
 | `src/components/events/events-loading.jsx` | Loading skeleton for the streamed event listing. |
 | `src/components/events/create-event-form.jsx` | Client Component with event fields, Host Name, validation, and a POST request to the local Express backend. |
 | `src/components/home/` | Separate Hero, Features, UpcomingEvents, Gallery, and Newsletter sections, event cards, and `create-event-button.jsx` linking to `/add-form`. |
 | `src/components/layout/` | Navbar with mobile menu/theme toggle, and footer. |
-| `src/components/layout/profile-menu.jsx` | Signed-in menu links to Create Event and Manage Events. Joined Events shows an availability message. Logout uses Better Auth. |
+| `src/components/layout/profile-menu.jsx` | Signed-in menu links to Create Event, Manage Events, and Joined Events. Logout uses Better Auth. |
 | `src/app/my-events/page.jsx` | Signed-in organizer dashboard using the session email and Express GET /my-events/:email. Separate Edit and Delete dialogs call PATCH /update-event/:id and DELETE /delete-event/:id, then refresh the dashboard. |
 | `src/data/home.js` | Static homepage features and gallery content; no sample event records. |
 | `src/app/globals.css` | Tailwind import, theme tokens, class-based dark-mode colors, and body styles. |
