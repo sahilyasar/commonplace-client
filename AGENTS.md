@@ -60,7 +60,7 @@ This repository is the Commonplace client, a community-service event platform. T
 | `src/components/home/` | Separate Hero, Features, UpcomingEvents, Gallery, and Newsletter sections, event cards, and `create-event-button.jsx` linking to `/add-form`. |
 | `src/components/layout/` | Navbar with mobile menu/theme toggle, and footer. |
 | `src/components/layout/profile-menu.jsx` | Signed-in menu links to Create Event and Manage Events. Joined Events shows an availability message. Logout uses Better Auth. |
-| `src/app/my-events/page.jsx` | Signed-in organizer dashboard using the session email and Express GET /my-events/:email. View and Create link to existing pages. Edit and final deletion await backend support. |
+| `src/app/my-events/page.jsx` | Signed-in organizer dashboard using the session email and Express GET /my-events/:email. Separate Edit and Delete dialogs call PATCH /update-event/:id and DELETE /delete-event/:id, then refresh the dashboard. |
 | `src/data/home.js` | Static homepage features and gallery content; no sample event records. |
 | `src/app/globals.css` | Tailwind import, theme tokens, class-based dark-mode colors, and body styles. |
 | `src/app/favicon.ico` | App Router favicon asset. |

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Users } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { buttonVariants } from "@/components/ui/button";
+import EditEvent from "./edit-event";
+import DeleteEvent from "./delete-event";
 
 export default function ManagedEventCard({ event }) {
   const date = new Date(event.date);
@@ -28,18 +29,8 @@ export default function ManagedEventCard({ event }) {
           <p className="mb-3 hidden items-center gap-2 text-xs text-muted-foreground md:flex"><Users size={14} />{event.hostName}</p>
           <div className="flex flex-wrap gap-3 md:grid md:grid-cols-[2fr_1fr_1fr]">
             <Link href={`/all-events/${event._id}`} className={buttonVariants({ variant: "secondary", className: "h-11 px-5 font-bold" })}>View</Link>
-            <Button disabled className="h-11 bg-slate-200 px-5 font-bold text-forest disabled:opacity-100">Edit</Button>
-            <Dialog>
-              <DialogTrigger className="h-11 rounded-lg bg-coral/20 px-5 text-sm font-bold text-[#ae412b] dark:text-orange-200">Delete</DialogTrigger>
-              <DialogContent>
-                <DialogTitle>Delete {event.title}?</DialogTitle>
-                <DialogDescription>Deletion is currently unavailable. Your event is still published.</DialogDescription>
-                <div className="flex justify-end gap-2">
-                  <DialogClose className={buttonVariants({ variant: "secondary" })}>Cancel</DialogClose>
-                  <Button variant="destructive" disabled>Delete event</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <EditEvent event={event} />
+            <DeleteEvent id={event._id} title={event.title} />
           </div>
         </div>
       </div>

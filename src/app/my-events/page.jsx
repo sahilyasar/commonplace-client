@@ -37,7 +37,7 @@ async function OrganizerDashboard() {
           <h1 className="mt-3 text-4xl leading-tight md:text-5xl">Manage My Events</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             <span className="hidden md:inline">View, edit and manage events you have published. </span>
-            Only you can update or delete your own initiatives.
+            Choose an event below to view or manage its details.
           </p>
         </div>
         <Link href="/add-form" className={buttonVariants({ className: "mt-5 h-13 w-full justify-between px-5 font-bold md:mt-0 md:h-12 md:w-auto" })}>
@@ -52,7 +52,7 @@ async function OrganizerDashboard() {
             {events.map((event) => <ManagedEventCard key={event._id} event={event} />)}
           </div>
           <p className="mt-6 text-sm text-muted-foreground md:rounded-xl md:bg-secondary md:p-4">
-            Editing and deletion will be available once event updates are enabled.
+            You’ll be asked to confirm before an event is permanently deleted.
           </p>
         </>
       )}
