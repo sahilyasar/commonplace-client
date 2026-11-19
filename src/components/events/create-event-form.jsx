@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
+import { authClient } from "@/lib/auth-client";
 
 function getTomorrowDate() {
   const tomorrow = new Date();
@@ -21,13 +22,22 @@ function getTomorrowDate() {
 export default function CreateEventForm() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Fetch the current user session to get the organizer's email
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
 
   async function handleSubmit(event) {
     event.preventDefault();
     if (isSubmitting) return;
+    if (!user) return;
+
     const form = event.currentTarget;
     const formData = new FormData(form);
     const eventData = Object.fromEntries(formData.entries());
+    // Merge the event data with the organizer's user data, excluding the 'id' field
+    const { id, ...restUser } = user;
+    const eventwithOrganizer = { ...eventData, ...restUser, user_id: id };
 
     for (const [name, value] of Object.entries(eventData)) {
       eventData[name] = value.trim();
@@ -73,7 +83,7 @@ export default function CreateEventForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(eventData),
+        body: JSON.stringify(eventwithOrganizer),
       });
 
       if (!res.ok) {
@@ -96,6 +106,8 @@ export default function CreateEventForm() {
     } finally {
       setIsSubmitting(false);
     }
+
+    
   }
 
   return (
@@ -122,6 +134,7 @@ export default function CreateEventForm() {
             <NativeSelectOption value="Donation">Donation</NativeSelectOption>
             <NativeSelectOption value="Winter relief">Winter relief</NativeSelectOption>
             <NativeSelectOption value="Food drive">Food drive</NativeSelectOption>
+            <NativeSelectOption value="Health Camp">Health Camp</NativeSelectOption>
           </NativeSelect>
           {errors.type && <p id="type-error" className="text-sm text-destructive">{errors.type}</p>}
         </div>
@@ -157,7 +170,7 @@ export default function CreateEventForm() {
 
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-secondary px-5 py-4 text-sm">
         <span className="text-xs font-medium uppercase text-muted-foreground">Organizer email</span>
-        <span className="font-medium">Available after login</span>
+        <span className="font-medium">{user?.email}</span>
       </div>
 
       <p className="text-sm text-[#c45336] dark:text-[#f69a7e]">All required fields must be valid. Event date must be in the future.</p>

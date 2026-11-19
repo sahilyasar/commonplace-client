@@ -6,14 +6,13 @@ import { ArrowRight, CalendarDays, Menu, Moon, Sun, X } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
+import ProfileMenu from "./profile-menu";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { data : session } = authClient.useSession()
-  const user = session?.user
-
-  console.log("user in navbar:", user);
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
 
   useEffect(() => {
     try {
@@ -49,9 +48,12 @@ export default function Navbar() {
             <Moon className="dark:hidden" aria-hidden="true" />
             <Sun className="hidden dark:block" aria-hidden="true" />
           </Button>
-          <Link href="/login" className={buttonVariants({ className: "hidden h-11 px-5 font-bold lg:inline-flex" })}>
-            <ArrowRight aria-hidden="true" /> Log in
-          </Link>
+          {user && <ProfileMenu user={user} />}
+          {!user && !isPending && (
+            <Link href="/login" className={buttonVariants({ className: "hidden h-11 px-5 font-bold lg:inline-flex" })}>
+              <ArrowRight aria-hidden="true" /> Log in
+            </Link>
+          )}
           <Button variant="secondary" size="icon" className="size-11 lg:hidden" aria-label={menuOpen ? "Close navigation" : "Open navigation"} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </Button>
@@ -63,7 +65,9 @@ export default function Navbar() {
             <Link href="/all-events" onClick={() => setMenuOpen(false)}>Upcoming events</Link>
             <Link href="/add-form" onClick={() => setMenuOpen(false)}>Create an event</Link>
             <Link href="/#how-it-works" onClick={() => setMenuOpen(false)}>How it works</Link>
-            <Link href="/login" className={buttonVariants()} onClick={() => setMenuOpen(false)}>Log in <ArrowRight aria-hidden="true" /></Link>
+            {!user && !isPending && (
+              <Link href="/login" className={buttonVariants()} onClick={() => setMenuOpen(false)}>Log in <ArrowRight aria-hidden="true" /></Link>
+            )}
           </div>
         </nav>
       )}
