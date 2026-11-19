@@ -9,6 +9,11 @@ export default async function EventDetails({ event }) {
   const membership = session?.user && await db.collection("joined_events").findOne({
     email: session.user.email, eventId: event._id,
   }, { projection: { _id: 1 } });
+  let joinedId = null;
+  if (membership) {
+    const id = membership._id;
+    joinedId = id.toHexString ? id.toHexString() : JSON.stringify(id);
+  }
   const date = new Date(event.date);
   const dateIsValid = !Number.isNaN(date.getTime());
   const shortDate = dateIsValid ? new Intl.DateTimeFormat("en-GB", {
@@ -40,7 +45,12 @@ export default async function EventDetails({ event }) {
         <p className="mt-5 flex items-center gap-2 text-sm text-muted-foreground md:hidden"><MapPin className="size-4 shrink-0" aria-hidden="true" />{event.location}</p>
       </section>
 
-      <EventActions eventId={event._id} signedIn={Boolean(session?.user)} joined={Boolean(membership)} />
+      <EventActions
+        key={`${event._id}-${session?.user?.id}-${joinedId}`}
+        event={event}
+        membershipEmail={session?.user?.email}
+        initialJoinedId={joinedId}
+      />
 
       <div className="mt-16 grid items-start gap-16 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] max-lg:gap-8 max-md:mt-7">
         <section aria-labelledby="about-event-heading">

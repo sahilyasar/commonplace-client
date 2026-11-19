@@ -26,8 +26,18 @@ export default function LoginForm() {
         toast.error(result.error.message || "Please check your details and try again.");
         return;
       }
+      const session = await authClient.getSession({ fetchOptions: { cache: "no-store" } });
+      if (session.error || !session.data?.user || session.data.user.id !== result.data?.user?.id) {
+        toast.error("Your login session could not be confirmed. Check that cookies are enabled and try again.");
+        return;
+      }
       toast.success("Welcome back!");
-      router.replace("/");
+      const eventId = new URLSearchParams(window.location.search).get("event");
+      if (eventId && /^[a-f0-9]{24}$/i.test(eventId)) {
+        window.location.replace(`/all-events/${eventId}`);
+      } else {
+        router.replace("/");
+      }
     } catch {
       toast.error("Could not reach Commonplace. Please try again.");
     } finally {

@@ -3,23 +3,77 @@
 import { ArrowRight, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { changeMembership } from "@/lib/event-membership";
+import { authClient } from "@/lib/auth-client";
 
-export default function EventActions({ eventId, signedIn, joined }) {
+export default function EventActions({ event, membershipEmail, initialJoinedId }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
+  const [joinedId, setJoinedId] = useState(initialJoinedId);
+  const joined = Boolean(joinedId);
+  const [needsLogin, setNeedsLogin] = useState(false);
 
   async function handleJoin() {
-    if (!signedIn) return router.push("/login");
     if (pending) return;
     setPending(true);
     try {
-      const result = await changeMembership(eventId, !joined);
-      if (result.loginRequired) return router.push("/login");
-      if (result.error) return toast.error(result.error);
-      toast.success(result.joined ? "You joined this event." : "You left this event.");
+      const session = await authClient.getSession({ fetchOptions: { cache: "no-store" } });
+      if (session.error) {
+        toast.error("Could not check your login. Please try again.");
+        return;
+      }
+      const user = session.data?.user;
+      if (!user?.email) {
+        setNeedsLogin(true);
+        return;
+      }
+      setNeedsLogin(false);
+      if (membershipEmail !== user.email) {
+        router.refresh();
+        toast("Refreshing your event membership. Please try again in a moment.");
+        return;
+      }
+      const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Dhaka" });
+      if (!joined && (!event.date || event.date.slice(0, 10) <= today)) {
+        toast.error("This event is no longer open to join.");
+        return;
+      }
+      if (joined) {
+        const response = await fetch(`http://localhost:3001/leave-event/${encodeURIComponent(joinedId)}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) throw new Error();
+        const result = await response.json();
+        if (result.deletedCount !== 1) throw new Error();
+        setJoinedId(null);
+        toast.success("You left this event.");
+      } else {
+        const response = await fetch("http://localhost:3001/join-event", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user.id,
+            name: user.name,
+            email: user.email,
+            eventId: event._id,
+            title: event.title,
+            type: event.type,
+            date: event.date,
+            location: event.location,
+            thumbnailUrl: event.thumbnailUrl,
+            description: event.description,
+            hostName: event.hostName,
+          }),
+        });
+        if (!response.ok) throw new Error();
+        const result = await response.json();
+        if (!result.insertedId) throw new Error();
+        setJoinedId(result.insertedId);
+        toast.success("You joined this event.");
+      }
+      router.refresh();
     } catch {
       toast.error("Could not update your commitment. Please try again.");
     } finally {
@@ -42,6 +96,7 @@ export default function EventActions({ eventId, signedIn, joined }) {
         <div>
           <h2 className="text-[22px]">Volunteers welcome</h2>
           <p className="mt-1 text-sm text-muted-foreground">{joined ? "Your place at this event is confirmed." : "Join your neighbors for this local initiative."}</p>
+          {needsLogin && <p role="status" className="mt-2 text-sm">Please <Link className="font-bold underline" href={`/login?event=${event._id}`}>log in</Link> to manage your place.</p>}
         </div>
       </div>
       <div className="flex shrink-0 gap-3">
