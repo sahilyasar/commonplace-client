@@ -10,6 +10,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Commonplace client
 
+- Login lives at `/login` and registration lives at `/signup`. Each page has its own submit handler and links to the other page. The forms use Better Auth email/password authentication. Google sign-in currently displays an availability toast.
+
 ## Project scope and current state
 
 This repository is the Commonplace client, a community-service event platform. The responsive homepage and Create Event form UI are implemented from the user's supplied designs. The form submits to a local backend; authentication and live homepage event data are still pending.
@@ -43,6 +45,7 @@ This repository is the Commonplace client, a community-service event platform. T
 
 | Path | Responsibility |
 | --- | --- |
+| `src/components/auth/` | Separate login and signup forms and their shared input field. |
 | `src/app/layout.js` | Root HTML/body shell, shared navbar/footer, global CSS import, font variables, and Commonplace metadata. |
 | `src/app/page.js` | Responsive homepage at `/`; remains a Server Component. |
 | `src/app/add-form/page.jsx` | Server Component page shell and metadata for creating an event. |
@@ -62,7 +65,8 @@ This repository is the Commonplace client, a community-service event platform. T
 | `public/images/` | Community photos extracted from the supplied homepage reference. |
 | `public/` | Also contains the unused default starter SVG assets. |
 | `next.config.mjs` | Next.js feature flags and the Tailwind Turbopack CSS loader. |
-| `jsconfig.json` | Maps `@/*` imports to `./src/*`. |
+| `tsconfig.json` | Active compiler configuration after adding `.ts` files; maps `@/*` imports to `./src/*`. |
+| `jsconfig.json` | Original JavaScript configuration with the same alias; Next.js uses `tsconfig.json` when present. |
 | `eslint.config.mjs` | Core Web Vitals rules; ignores `.next`, `out`, `build`, and `next-env.d.ts`. |
 | `.gitignore` | Excludes dependencies, generated output, coverage, environment files, and deployment artifacts. |
 
@@ -101,7 +105,7 @@ The user supplied these font choices for the COMMONPLACE Figma design; they are 
 - Read the relevant installed Next.js guide before writing application code. Start with `node_modules/next/dist/docs/01-app/01-getting-started/`; consult the matching API reference for the feature being changed.
 - Keep the managed Next.js instructions above intact. Put project-specific guidance outside the managed markers.
 - Use simple, beginner-friendly commit messages, such as `add navbar`, `create login page`, or `fix event form`, as requested by the user.
-- Match the surrounding JavaScript/JSX style: double quotes and two-space indentation; generated UI files often omit semicolons. No formatter configuration or TypeScript setup currently exists.
+- Match the surrounding JavaScript/JSX style: double quotes and two-space indentation; generated UI files often omit semicolons. No formatter configuration exists. A TypeScript configuration is now present for `.ts` files; preserve the `@/*` alias in `tsconfig.json` when changing compiler settings.
 - Keep routes under `src/app`. Use the existing `@/` alias where it makes imports clearer.
 - Follow App Router server/client boundaries; add `"use client"` to components that need client-side interactivity rather than making the root layout a client component.
 - Prefer the existing Tailwind utilities and global theme tokens for UI work. Keep global CSS imported from the root layout.
