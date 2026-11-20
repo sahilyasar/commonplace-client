@@ -49,7 +49,7 @@ export default function SignupForm() {
         <Field label="Full name" name="name" icon={CircleUser} autoComplete="name" placeholder="Your full name" required />
         <Field label="Email address" name="email" icon={Mail} type="email" autoComplete="email" placeholder="you@example.com" required />
         <Field label="Profile photo URL" name="image" icon={ImageIcon} type="url" placeholder="https://example.com/avatar.jpg" aria-describedby="photo-help" />
-        <p id="photo-help" className="text-xs text-muted-foreground">Optional. You can leave this field empty.</p>
+        {/* <p id="photo-help" className="text-xs text-muted-foreground">Optional. You can leave this field empty.</p> */}
         <Field label="Password" name="password" icon={KeyRound} type="password" required placeholder="Enter your password"
           autoComplete="new-password"
           pattern="(?=.*[A-Z])(?=.*[a-z]).{6,}"
