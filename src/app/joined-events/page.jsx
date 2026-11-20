@@ -32,7 +32,7 @@ async function Commitments() {
         <div>
           <p className="eyebrow">My volunteer commitments</p>
           <h1 className="mt-3 text-4xl leading-tight md:text-5xl">Joined Events</h1>
-          <p className="mt-3 text-muted-foreground">Your joined events, ordered by date.</p>
+          <p className="mt-3 text-muted-foreground">Your joined events are listed below. </p>
         </div>
         <Link href="/all-events" className={buttonVariants({ className: "hidden h-12 px-5 font-bold md:inline-flex" })}>Explore More Events</Link>
       </header>
@@ -43,9 +43,9 @@ async function Commitments() {
           <div className="mt-5 grid max-w-[1156px] gap-5 md:mt-[74px] md:grid-cols-2 md:gap-6">
             {events.map((event) => <JoinedEventCard key={event._id.toString()} event={event} today={today} />)}
           </div>
-          <p className="mt-6 hidden rounded-xl bg-secondary p-4 text-sm text-muted-foreground md:block">
+          {/* <p className="mt-6 hidden rounded-xl bg-secondary p-4 text-sm text-muted-foreground md:block">
             Joined events appear in ascending event-date order and are specific to your account.
-          </p>
+          </p> */}
         </>
       )}
       <Link href="/all-events" className={buttonVariants({ className: "mt-5 h-13 w-full justify-between px-5 font-bold md:hidden" })}>

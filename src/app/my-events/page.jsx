@@ -54,9 +54,9 @@ async function OrganizerDashboard() {
           <div className="mt-5 grid max-w-[1156px] gap-5 md:mt-[74px] md:grid-cols-2 md:gap-6">
             {events.map((event) => <ManagedEventCard key={event._id} event={event} />)}
           </div>
-          <p className="mt-6 text-sm text-muted-foreground md:rounded-xl md:bg-secondary md:p-4">
+          {/* <p className="mt-6 text-sm text-muted-foreground md:rounded-xl md:bg-secondary md:p-4">
             You’ll be asked to confirm before an event is permanently deleted.
-          </p>
+          </p> */}
         </>
       )}
     </>
