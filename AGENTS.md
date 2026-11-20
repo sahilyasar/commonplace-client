@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Commonplace client
 
-- Login lives at `/login` and registration lives at `/signup`. Each page has its own submit handler and links to the other page. The forms use Better Auth email/password authentication. Google sign-in currently displays an availability toast.
+- Login lives at `/login` and registration lives at `/signup`. Each page has its own submit handler and links to the other page. Login supports Better Auth email/password and Google sign-in. Both return to the requested event or the homepage. Google credentials are read server-side from `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
 ## Project scope and current state
 

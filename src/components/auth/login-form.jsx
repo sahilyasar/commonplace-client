@@ -2,20 +2,43 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowRight, KeyRound, Mail } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import Field from "@/components/auth/auth-field";
 import { authClient } from "@/lib/auth-client";
 
+function getReturnPath() {
+  const eventId = new URLSearchParams(window.location.search).get("event");
+  if (eventId && /^[a-f0-9]{24}$/i.test(eventId)) return `/all-events/${eventId}`;
+  return "/";
+}
+
 export default function LoginForm() {
-  const router = useRouter();
   const [pending, setPending] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
+
+  async function handleGoogleLogin() {
+    if (pending || googlePending) return;
+    setGooglePending(true);
+    try {
+      const result = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: getReturnPath(),
+      });
+      if (result.error) {
+        toast.error(result.error.message || "Could not start Google sign-in.");
+        setGooglePending(false);
+      }
+    } catch {
+      toast.error("Could not start Google sign-in. Please try again.");
+      setGooglePending(false);
+    }
+  }
 
   async function handleLogin(event) {
     event.preventDefault();
-    if (pending) return;
+    if (pending || googlePending) return;
     const data = new FormData(event.currentTarget);
     const email = data.get("email").trim();
     const password = data.get("password");
@@ -32,12 +55,7 @@ export default function LoginForm() {
         return;
       }
       toast.success("Welcome back!");
-      const eventId = new URLSearchParams(window.location.search).get("event");
-      if (eventId && /^[a-f0-9]{24}$/i.test(eventId)) {
-        window.location.replace(`/all-events/${eventId}`);
-      } else {
-        router.replace("/");
-      }
+      window.location.replace(getReturnPath());
     } catch {
       toast.error("Could not reach Commonplace. Please try again.");
     } finally {
@@ -51,13 +69,13 @@ export default function LoginForm() {
         <Field label="Email address" name="email" icon={Mail} type="email" autoComplete="email" placeholder="you@example.com" required />
         <Field label="Password" name="password" icon={KeyRound} type="password" required placeholder="Enter your password"
           autoComplete="current-password" />
-        <Button type="submit" disabled={pending} className="h-[54px] w-full justify-between rounded-xl px-5 font-bold">
+        <Button type="submit" disabled={pending || googlePending} className="h-[54px] w-full justify-between rounded-xl px-5 font-bold">
           {pending ? "Please wait…" : "Log in"} <ArrowRight aria-hidden="true" />
         </Button>
       </form>
       <p className="mt-5 hidden text-center text-xs text-muted-foreground sm:block">OR CONTINUE WITH</p>
-      <Button variant="secondary" className="mt-4 h-[52px] w-full gap-4 rounded-xl font-bold" onClick={() => toast("Google sign-in is not available yet.")}>
-        <span aria-hidden="true" className="text-lg text-coral">G</span> Continue with Google
+      <Button type="button" variant="secondary" disabled={pending || googlePending} className="mt-4 h-[52px] w-full gap-4 rounded-xl font-bold" onClick={handleGoogleLogin}>
+        <span aria-hidden="true" className="text-lg text-coral">G</span> {googlePending ? "Opening Google…" : "Continue with Google"}
       </Button>
       <p className="mt-5 text-sm sm:text-center">
         New here?{" "}

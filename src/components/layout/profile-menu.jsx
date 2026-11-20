@@ -48,7 +48,7 @@ export default function ProfileMenu({ user }) {
       <DropdownMenu>
         <DropdownMenuTrigger aria-label="Profile menu" className="flex items-center gap-2 rounded-full text-sm font-bold">
           <ProfileAvatar user={user} />
-          <span className="hidden sm:inline">Profile</span>
+          <span className="hidden sm:inline">{user.name}</span>
           <ChevronDown aria-hidden="true" className="hidden size-3 sm:block" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" sideOffset={12} className="w-72 max-w-[calc(100vw-24px)] rounded-2xl p-3">
