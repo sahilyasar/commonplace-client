@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const eventTypes = ["Cleanup", "Plantation", "Donation", "Winter relief", "Food drive", "Health Camp", "Education"];
 
@@ -40,10 +41,12 @@ export default function EditEvent({ event }) {
       }
     }
     setSaving(true);
+
+    const token = await getTokenFromClient();
     try {
       const response = await fetch(`http://localhost:3001/update-event/${event._id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
         body: JSON.stringify(changes),
       });
       if (!response.ok) throw new Error();

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 export default function DeleteEvent({ id, title }) {
   const router = useRouter();
@@ -14,8 +15,13 @@ export default function DeleteEvent({ id, title }) {
   async function confirmDelete() {
     if (deleting) return;
     setDeleting(true);
+
+    const token = await getTokenFromClient();
     try {
-      const response = await fetch(`http://localhost:3001/delete-event/${id}`, { method: "DELETE" });
+      const response = await fetch(`http://localhost:3001/delete-event/${id}`, { 
+        method: "DELETE",
+        headers: { authorization: `Bearer ${token}` }
+      });
       if (!response.ok) throw new Error();
       const result = await response.json();
       if (result.deletedCount !== 1) throw new Error();

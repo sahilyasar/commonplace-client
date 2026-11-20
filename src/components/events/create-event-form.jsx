@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { authClient } from "@/lib/auth-client";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 function getTomorrowDate() {
   const tomorrow = new Date();
@@ -77,11 +78,13 @@ export default function CreateEventForm() {
     setIsSubmitting(true);
     const toastId = toast.loading("Publishing event...");
 
+    const token = await getTokenFromClient();
     try {
       const res = await fetch("http://localhost:3001/add-event", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(eventwithOrganizer),
       });

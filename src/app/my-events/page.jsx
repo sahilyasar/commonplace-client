@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { buttonVariants } from "@/components/ui/button";
 import ManagedEventCard from "@/components/events/managed-event-card";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 export const metadata = { title: "Manage My Events | Commonplace" };
 
@@ -13,11 +14,13 @@ async function OrganizerDashboard() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.email) redirect("/login");
 
+  const token = await getTokenFromServer();
   let events = [];
   let message = "";
   try {
     const email = encodeURIComponent(session.user.email);
     const response = await fetch(`http://localhost:3001/my-events/${email}`, {
+      headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
       signal: AbortSignal.timeout(10000),
     });
