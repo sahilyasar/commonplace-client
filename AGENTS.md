@@ -26,10 +26,10 @@ This repository is the Commonplace client, a community-service event platform. T
 - Navbar and footer are shared by all pages and mounted inside `<body>` in the root layout. Do not add duplicate instances to individual pages. Shared links to homepage sections use `/#section-id` so they also work from `/add-form`.
 - `src/data/home.js` holds static features and gallery captions. The homepage's `UpcomingEvents` section streams cards from `GET /featured-events` in API order. The endpoint returns up to six events.
 - Event cards use the API fields `_id`, `title`, `type`, `date`, `location`, `description`, `thumbnailUrl`, and `hostName`, and link to `/all-events/[id]`. The shared card supports a `listing` variant for `/all-events`. Create-event links open `/add-form`; login and newsletter subscription still show informational toasts. Reading and creating events use the local Express backend; database persistence is owned by that separate backend.
-- The form's organizer email is marked as available after login. When authentication is implemented, attach the actual authenticated user's email and protect `/add-form`; do not use a hardcoded sample email as the organizer identity.
+- `src/proxy.js` verifies the Better Auth session before allowing access to `/add-form`, `/my-events`, or `/joined-events`. Guests are redirected to login. Email and Google login can return to one of those three pages. The form uses the authenticated organizer’s email.
 - There are no implemented Next.js API routes, authentication flows, direct database integrations, application state libraries, or committed automated tests. Shared UI primitives are installed under `src/components/ui`.
 - `README.md` is the default create-next-app documentation. Its `app/page.js` example refers to `src/app/page.js` in this repository.
-- No environment variables are referenced by the current source, and no environment template is provided.
+- The auth client accepts an optional `NEXT_PUBLIC_BETTER_AUTH_URL` at build time. Leave it unset for same-origin auth. Server-side auth uses `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `MONGODB_URI`, and the Google credentials above.
 
 ## Stack and tooling
 

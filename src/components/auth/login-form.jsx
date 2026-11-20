@@ -9,7 +9,10 @@ import Field from "@/components/auth/auth-field";
 import { authClient } from "@/lib/auth-client";
 
 function getReturnPath() {
-  const eventId = new URLSearchParams(window.location.search).get("event");
+  const params = new URLSearchParams(window.location.search);
+  const next = params.get("next");
+  if (["/add-form", "/my-events", "/joined-events"].includes(next)) return next;
+  const eventId = params.get("event");
   if (eventId && /^[a-f0-9]{24}$/i.test(eventId)) return `/all-events/${eventId}`;
   return "/";
 }

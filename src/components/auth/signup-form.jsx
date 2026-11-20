@@ -30,7 +30,6 @@ export default function SignupForm() {
         name, email, password, image: data.get("image").trim() || undefined,
       });
 
-      console.log("Signup result:", result);
       if (result.error) {
         toast.error(result.error.message || "Please check your details and try again.");
         return;
