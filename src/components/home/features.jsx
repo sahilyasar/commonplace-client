@@ -5,9 +5,9 @@ export default function Features() {
     <section id="how-it-works" className="section-space bg-background">
       <div className="page-container">
         <div className="section-heading">
-          <p className="eyebrow">Built for grassroots action</p>
-          <h2>Small actions. Stronger communities.</h2>
-          <p className="section-description max-lg:hidden">Everything you need to discover community drives, participate with confidence, and lead something meaningful.</p>
+          <p className="eyebrow">How it works</p>
+          <h2>Volunteer or host an event</h2>
+          <p className="section-description max-lg:hidden">Start with a cause you care about and a date that works for you.</p>
         </div>
         <div className="mt-7 grid grid-cols-2 gap-5 lg:grid-cols-4 max-sm:gap-4">
           {features.map((feature, index) => (

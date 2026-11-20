@@ -7,8 +7,8 @@ export default function Gallery() {
       <div className="page-container">
         <div className="section-heading">
           <p className="eyebrow">Stories from our streets</p>
-          <h2>Community looks good on us.</h2>
-          <p className="section-description max-lg:hidden">Scenes of neighbors making everyday kindness visible.</p>
+          <h2>Neighbors at work</h2>
+          <p className="section-description max-lg:hidden">A look at the work volunteers do, from sorting winter blankets to planting trees.</p>
         </div>
         <div className="mt-9 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-3 max-sm:gap-4">
           {stories.map((story, index) => (

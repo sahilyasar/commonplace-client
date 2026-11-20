@@ -21,7 +21,7 @@ async function FeaturedEventCards() {
   }
 
   if (events.length === 0) {
-    return <p className="rounded-2xl bg-card px-6 py-12 text-center text-muted-foreground">Upcoming events will appear here.</p>;
+    return <p className="rounded-2xl bg-card px-6 py-12 text-center text-muted-foreground">There are no featured events right now.</p>;
   }
 
   return (
@@ -37,9 +37,9 @@ export default function UpcomingEvents() {
       <div className="page-container">
         <div className="flex items-end justify-between gap-6">
           <div>
-            <p className="eyebrow">Upcoming initiatives</p>
-            <h2 className="mt-4 text-[42px] leading-tight max-md:text-3xl">Find the good happening nearby.</h2>
-            <p className="mt-3 text-muted-foreground">Find your next opportunity to show up for your community.</p>
+            <p className="eyebrow">Featured events</p>
+            <h2 className="mt-4 text-[42px] leading-tight max-md:text-3xl">Explore community events</h2>
+            <p className="mt-3 text-muted-foreground">Open an event to see the date, meeting point, and organizer.</p>
           </div>
           <Link href="/all-events" className={buttonVariants({ className: "h-13 gap-5 px-6 font-bold max-md:hidden" })}>View all events <ArrowRight aria-hidden="true" /></Link>
         </div>

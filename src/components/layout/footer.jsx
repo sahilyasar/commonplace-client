@@ -18,16 +18,15 @@ export default function Footer() {
           </nav>
           <nav aria-label="Community" className="footer-column max-sm:hidden">
             <h2>Community</h2>
-            <Link href="/#how-it-works">Our mission</Link>
-            <Link href="/#community">Community stories</Link>
-            <Link href="/#newsletter">Stay connected</Link>
+            <Link href="/#upcoming-events">Featured events</Link>
+            <Link href="/#community">Volunteer photo gallery</Link>
+            <Link href="/#newsletter">Newsletter</Link>
           </nav>
-          <div className="footer-column max-sm:hidden">
-            <h2>Social</h2>
-            <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">Facebook</a>
-            <a href="https://x.com/" target="_blank" rel="noreferrer">X</a>
-          </div>
+          <nav aria-label="Your events" className="footer-column max-sm:hidden">
+            <h2>Your events</h2>
+            <Link href="/joined-events">Events you joined</Link>
+            <Link href="/my-events">Events you host</Link>
+          </nav>
         </div>
         <div className="flex flex-wrap justify-between gap-3 border-t border-white/20 pt-7 text-xs text-white/60">
           <p>© 2026 Commonplace. Made for neighbors who care.</p>
